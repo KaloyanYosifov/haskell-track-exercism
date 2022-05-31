@@ -39,11 +39,14 @@ phrases = [
         "twelve Drummers Drumming"
         ]
 
+
+recite' :: Int -> String
+recite' start
+    | start == 1 = basePhrase
+    | otherwise = (intercalate ", " [x | x <- reverse $ take (start - 1) phrases]) ++ ", and " ++ basePhrase
+
 recite :: Int -> Int -> [String]
 recite start stop
-  | stop == 1 = [baseText ++ basePhrase]
-  | start == stop = [baseText ++ recite']
-  | otherwise = recite start (stop - 1) ++ [baseText ++ recite']
-  where baseText = generateBaseText stop'
-        stop' = stop - 1
-        recite' = (intercalate ", " [x | x <- reverse $ take stop' phrases]) ++ ", and " ++ basePhrase
+  | start == stop = [baseText ++ recite' start]
+  | otherwise = (baseText ++ recite' start):recite (start + 1) stop
+  where baseText = generateBaseText (start - 1)
