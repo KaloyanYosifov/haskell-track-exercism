@@ -40,13 +40,13 @@ phrases = [
         ]
 
 
-recite' :: Int -> String
-recite' start
+getPhrase :: Int -> String
+getPhrase start
     | start == 1 = basePhrase
     | otherwise = (intercalate ", " [x | x <- reverse $ take (start - 1) phrases]) ++ ", and " ++ basePhrase
 
 recite :: Int -> Int -> [String]
 recite start stop
-  | start == stop = [baseText ++ recite' start]
-  | otherwise = (baseText ++ recite' start):recite (start + 1) stop
-  where baseText = generateBaseText (start - 1)
+  | start == stop = [fullText]
+  | otherwise = fullText:recite (start + 1) stop
+  where fullText = generateBaseText (start - 1) ++ getPhrase start
