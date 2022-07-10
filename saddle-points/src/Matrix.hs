@@ -5,21 +5,13 @@ import           Data.Array
 type Point = (Int, Int)
 type SaddleArray = Array Point Int
 
-fetchCols :: Point -> SaddleArray -> [Int]
-fetchCols (_, y) arr = fetchCols' minRow
-    where fetchCols' :: Int -> [Int]
-          fetchCols' row
-            | row == maxRow = [arr ! (row, y)]
-            | otherwise = (arr ! (row, y)):fetchCols' (row + 1)
-          ((minRow, _), (maxRow, _)) = bounds arr
-
 fetchRows :: Point -> SaddleArray -> [Int]
-fetchRows (x, _) arr = fetchRows' minCol
-    where fetchRows' :: Int -> [Int]
-          fetchRows' col
-            | col == maxCol = [arr ! (x, col)]
-            | otherwise = (arr ! (x, col)):fetchRows' (col + 1)
-          ((_, minCol), (_, maxCol)) = bounds arr
+fetchRows (x, _) arr = [arr ! (x, c) | c <- [minCol..maxCol]]
+    where ((_, minCol), (_, maxCol)) = bounds arr
+
+fetchCols :: Point -> SaddleArray -> [Int]
+fetchCols (_, y) arr = [arr ! (r, y) | r <- [minRow..maxRow]]
+    where ((minRow, _), (maxRow, _)) = bounds arr
 
 loop :: Point -> SaddleArray -> [Point]
 loop point@(x, y) arr
